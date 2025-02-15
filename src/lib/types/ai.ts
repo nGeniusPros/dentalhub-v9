@@ -1,14 +1,20 @@
 export interface PracticeMetrics {
-  monthlyRevenue: number;
-  patientCount: number;
+  revenue: number;
+  patientGrowth: number;
   appointmentFillRate: number;
-  treatmentAcceptance: number;
+  treatmentAcceptanceRate: number;
 }
 
 export interface AIConsultantPrompt {
   metrics: PracticeMetrics;
-  focusArea: 'revenue' | 'operations' | 'patient-care' | 'marketing';
+  focusAreas: Array<'revenue' | 'operations' | 'patient-care' | 'marketing'>;
+  timeframe?: 'daily' | 'weekly' | 'monthly' | 'yearly';
   question: string;
+}
+
+export interface AIResponse {
+  insight: string;
+  recommendations: string[];
 }
 
 export interface AIInsight {
@@ -16,12 +22,7 @@ export interface AIInsight {
   title: string;
   description: string;
   impact: 'high' | 'medium' | 'low';
-  category: 'revenue' | 'operations' | 'patient-care' | 'marketing';
-  action: string;
-  metric?: {
-    label: string;
-    value: string;
-    trend: 'up' | 'down';
-    percentage: number;
-  };
+  recommendations: string[];
+  timestamp: string;
+  status: 'active' | 'archived';
 }

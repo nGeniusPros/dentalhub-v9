@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { generateAIResponse } from '../lib/api/openai';
-import type { AIConsultantPrompt, AIInsight } from '../lib/types/ai';
+import { generateAIResponse } from '@/lib/api/deepseek';
+import type { AIConsultantPrompt, AIInsight } from '@/lib/types/ai';
 
 export const useAIConsultant = () => {
   const [loading, setLoading] = useState(false);
@@ -17,10 +17,11 @@ export const useAIConsultant = () => {
       const insight: AIInsight = {
         id: Date.now().toString(),
         title: 'AI-Generated Insight',
-        description: response || '',
+        description: response.insight,
         impact: determineImpact(prompt.metrics),
-        category: prompt.focusArea,
-        action: 'View Details',
+        recommendations: response.recommendations,
+        timestamp: new Date().toISOString(),
+        status: 'active'
       };
 
       return insight;
@@ -40,10 +41,12 @@ export const useAIConsultant = () => {
 };
 
 const determineImpact = (metrics: AIConsultantPrompt['metrics']): AIInsight['impact'] => {
-  // Logic to determine impact based on metrics
-  if (metrics.appointmentFillRate < 70 || metrics.treatmentAcceptance < 60) {
+  const { revenue, patientGrowth, appointmentFillRate, treatmentAcceptanceRate } = metrics;
+  
+  // Simple impact determination logic
+  if (revenue > 100000 || patientGrowth > 20 || appointmentFillRate > 90 || treatmentAcceptanceRate > 85) {
     return 'high';
-  } else if (metrics.appointmentFillRate < 85 || metrics.treatmentAcceptance < 75) {
+  } else if (revenue > 50000 || patientGrowth > 10 || appointmentFillRate > 75 || treatmentAcceptanceRate > 70) {
     return 'medium';
   }
   return 'low';
