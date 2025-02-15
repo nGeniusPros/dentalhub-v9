@@ -1,0 +1,14 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Regex pattern for conventional commits
+commit_pattern="^(feat|fix|docs|style|refactor|test|chore)(\([a-z-]+\))?: .+$"
+commit_msg=$(cat "$1")
+
+if ! echo "$commit_msg" | grep -qE "$commit_pattern"; then
+    echo "Error: Invalid commit message format."
+    echo "Must match pattern: type(scope?): description"
+    echo "Types: feat, fix, docs, style, refactor, test, chore"
+    echo "Example: feat(auth): add login functionality"
+    exit 1
+fi
